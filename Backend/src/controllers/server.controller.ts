@@ -73,16 +73,15 @@ const getServersWhereUserIsMember = asyncHandler(async (req: AuthRequest, res: R
 const generateNewInviteCode = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { serverId } = req.body;
     if (!serverId) {
-        throw new ApiError(400, "Cannot get server Id");
+      throw new ApiError(400, "Cannot get server Id");
     }
     const newInviteCode = uuidv4();
     const server = await Server.findByIdAndUpdate(serverId, { inviteCode: newInviteCode }, { new: true });
     if (!server) {
-        throw new ApiError(404, "Server not found");
+      throw new ApiError(404, "Server not found");
     }
     return res.status(200).json(new ApiResponse(200, server, "Invite code generated successfully"));
-})
-
+  });
 
 const createServer = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { serverName, profileId } = req.body;

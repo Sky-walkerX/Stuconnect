@@ -46,7 +46,7 @@ const Topbar = () => {
       <ManageMembers isOpen={isOpen} onClose={toggleModal} />
 
       {isModerator && (
-        <InvitePeopleModal inviteCode={server.inviteCode}/>
+        <InvitePeopleModal inviteCode={server.inviteCode} serverId={server._id}/>
       )}
       {isAdmin && (
         <div className="mx-2">Server Settings</div>

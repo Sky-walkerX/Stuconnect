@@ -10,24 +10,34 @@ import { Input } from '@/components/ui/input';
 import { Button } from "@/components/ui/button";
 import { Check, Copy, RefreshCw, UserPlus } from "lucide-react";
 import { useState } from "react";
+import { generateNewInviteCode } from '@/app/apiCalls';
 
 interface ServerModalProps {
     inviteCode: string;
+    serverId: string; // Ensure we pass serverId as a prop
 }
 
-const InvitePeopleModal = ({ inviteCode }: ServerModalProps) => {
+const InvitePeopleModal = ({ inviteCode, serverId }: ServerModalProps) => {
     const [copied, setCopied] = useState(false);
+    const [currentInvite, setCurrentInvite] = useState(inviteCode);
 
     const onCopy = () => {
-        navigator.clipboard.writeText(inviteCode);
+        navigator.clipboard.writeText(currentInvite);
         setCopied(true);
         setTimeout(() => {
             setCopied(false);
         }, 1000);
     };
 
-    const generateNewLink = () => {
-        console.log("New link generated");
+    // No parameter here; using serverId from props.
+    const handleGenerateNewLink = async () => {
+        try {
+            const newInviteResponse = await generateNewInviteCode(serverId);
+            // Assuming your API returns the new invite code directly, update the state.
+            setCurrentInvite(newInviteResponse.inviteCode);
+        } catch (error) {
+            console.error("Failed to regenerate invite code:", error);
+        }
     };
 
     return (
@@ -51,7 +61,7 @@ const InvitePeopleModal = ({ inviteCode }: ServerModalProps) => {
                     <div className='flex items-center mt-2 gap-x-2'>
                         <Input
                             className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-white focus-visible:ring-offset-0"
-                            value={inviteCode}
+                            value={currentInvite}
                             readOnly={true}
                         />
                         <Button size="icon" onClick={onCopy}>
@@ -59,7 +69,7 @@ const InvitePeopleModal = ({ inviteCode }: ServerModalProps) => {
                         </Button>
                     </div>
                     <Button
-                        onClick={generateNewLink}
+                        onClick={handleGenerateNewLink}
                         variant="link"
                         size="sm"
                         className="text-xs text-white mt-4"

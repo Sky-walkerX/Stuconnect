@@ -29,6 +29,16 @@ export const joinServer = async (inviteCode: string, profileId: string) => {
     }
 };
 
+export const generateNewInviteCode = async (serverId: string) => {
+    try {
+      const response = await api.post('/servers/generateNewInviteCode', { serverId });
+      return response.data.data;
+    } catch (error) {
+      console.error('Error regenerating invite link:', error);
+      throw error;
+    }
+  };
+
 export const getProfilesByServerId = async (serverId: string) => {
     try {
         const response = await api.post('/profiles/getProfilesByServerId', { serverId });
